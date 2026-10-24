@@ -43,14 +43,27 @@ Variants of the simulations with different growth conditions use:
 - `anchoredcircle_exponential_perimeteronly.py`: simulation without area growth.
 
 To run parameter sweeps the following scripts can be used:
-- template_execute_sweep.py
-- template_execute_sweep_washout.py
-- template_execute_sweep_kappan.py
-- template_execute_sweep_kappan_perimeter.py
-- template_execute_sweep_tau.py
+- `template_execute_sweep.py`
+- `template_execute_sweep_washout.py`
+- `template_execute_sweep_kappan.py`
+- `template_execute_sweep_kappan_perimeter.py`
+- `template_execute_sweep_tau.py`
 
 These scripts create an input folder where they store a `.json` file with the input parameters, an output folder where the positions are stored at specified intervals in a `.npz` file. This folder also contains a `log/` subfolder, that contains the `stdout` of the simulation. The code to generate the `.json` files is contained in `generate_params.py`.
 
 ## Analysis scripts
 These are the scripts that are used for analysis of the simulation output (and sometimes experimental data). 
 These scripts also create the basis for the figures in the corresponding paper.
+
+A brief description of the scripts:
+- `create_acircularity_plot_washout.py`: Create acircularity change plot for the thinning simulation, with respect to the starting point (Fig. 5D).
+- `create_acircularity_plot_washoutcontrol.py`: Create acircularity change plot for the thinning simulation, with respect to the washout point (Fig. 5E).
+- `create_acircularity_plot.py`: Create acircularity change plot for a range of interface thicknesses (Fig. 4A).
+- `create_areavolumeratio_plot_experiment.py`: Create a plot of area and volume change for control glands (Fig. 2C).
+- `create_asphericity_plot_experiment.py`: Create a plot of asphericity change for BB-94 treatments (Fig. 4B).
+- `create_asphericity_plot_washout_experiment.py`: Create a plot of asphericity change of the washout experiment (Fig. 5F).
+- `create_budsize_vs_tg_plot.py`: Create a plot of the mean budsize versus the growth time (Fig. 6B).
+- `create_phasediagram.py`: Create phasediagram of the budding-to-ballooning transition (Fig. 6A).
+- `create_still_curvature.py`: Plot outline of filament colored according to curvature (Fig. 3B, Fig. 5A).
+- `create_still_line.py`: Plot outline of filament in a single color (Fig. 4A, Fig. 6A-C).
+- `PlotLibrary.py`: Plotting class with information regarding figure dimensions for different journals.

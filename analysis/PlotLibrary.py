@@ -155,7 +155,6 @@ class FigureSettings:
 		self.doubleColumn = doubleWidth/self.mmPerInch
 
 		# Fix the fonts and turn on latex formatting
-		# !!!! Note I am still not sure how well this works.
 		mpl.rcParams['ps.usedistiller']='xpdf'
 		plt.rc('text', usetex=True)
 		plt.rc('font', **font)
@@ -225,5 +224,4 @@ def sci_notation(num, decimal_digits=1, precision=None, exponent=None):
 	if precision is None:
 		precision = decimal_digits
 
-	#return r"${0:.{2}f}\cdot10^{{{1:d}}}$".format(coeff, exponent, precision)
 	return coeff, exponent
