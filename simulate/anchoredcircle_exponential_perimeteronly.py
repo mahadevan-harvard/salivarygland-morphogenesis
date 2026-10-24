@@ -1,4 +1,11 @@
+"""
+Code for manuscript "*Basement membrane dynamics governs salivary gland budding morphogenesis" 
+Soft Math Lab (Harvard University)
+Author: Justin Tauber
+"""
+
 import numpy as np
+
 import jax
 jax.config.update('jax_enable_x64', True)
 import jax.numpy as jnp

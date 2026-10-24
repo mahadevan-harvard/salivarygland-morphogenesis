@@ -31,3 +31,26 @@ This project uses Python 3. The simulation code relies on JAX.
 
 - `analysis/`: Scripts to plot simulation and segmentation output
 - `simulate/`: Core simulation and solver code
+
+## simulation scripts
+
+The core of the simulations code is:
+- `interactions.py`: definitions of interaction energies
+- `anchoredcircle_exponential.py`: Brownian dynamics implementation and growth definitions
+
+Variants of the simulations with different growth conditions use:
+- `anchoredcircle_exponential_washout.py`: simulation with exponential thinning. 
+- `anchoredcircle_exponential_perimeteronly.py`: simulation without area growth.
+
+To run parameter sweeps the following scripts can be used:
+- template_execute_sweep.py
+- template_execute_sweep_washout.py
+- template_execute_sweep_kappan.py
+- template_execute_sweep_kappan_perimeter.py
+- template_execute_sweep_tau.py
+
+These scripts create an input folder where they store a `.json` file with the input parameters, an output folder where the positions are stored at specified intervals in a `.npz` file. This folder also contains a `log/` subfolder, that contains the `stdout` of the simulation. The code to generate the `.json` files is contained in `generate_params.py`.
+
+## Analysis scripts
+These are the scripts that are used for analysis of the simulation output (and sometimes experimental data). 
+These scripts also create the basis for the figures in the corresponding paper.

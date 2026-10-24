@@ -1,3 +1,9 @@
+"""
+Code for manuscript "*Basement membrane dynamics governs salivary gland budding morphogenesis" 
+Soft Math Lab (Harvard University)
+Author: Justin Tauber
+"""
+
 import os
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path

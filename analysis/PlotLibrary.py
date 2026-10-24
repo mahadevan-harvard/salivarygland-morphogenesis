@@ -1,3 +1,9 @@
+"""
+Code for manuscript "*Basement membrane dynamics governs salivary gland budding morphogenesis" 
+Soft Math Lab (Harvard University)
+Author: Justin Tauber
+"""
+
 from __future__ import absolute_import, division, print_function
 
 import matplotlib as mpl

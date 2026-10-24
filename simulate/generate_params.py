@@ -1,3 +1,9 @@
+"""
+Code for manuscript "*Basement membrane dynamics governs salivary gland budding morphogenesis" 
+Soft Math Lab (Harvard University)
+Author: Justin Tauber
+"""
+
 import json
 
 def generate_params(z0=1, k_P=0.01, k_A=0.1,tau_g=1000000, dt=0.1, kappa_n=5e-6, Nupdate=5000, motility=1e-7, r0=5.0, tau_final=1.5, growth_mode="exponential", seed=0, V=1, inputFolder="input"):
