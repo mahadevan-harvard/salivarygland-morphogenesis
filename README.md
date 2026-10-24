@@ -3,7 +3,16 @@ Brownian dynamics model for bud formation in early morphogenesis of salivary gla
 
 > *Basement membrane dynamics governs salivary gland budding morphogenesis,*  
 > J. Tauber, A. Morales, H. Li, J. Cui, C. Stringer, G.P.T. Choi, S. Wang, L. Mahadevan  
-> [TBD].
+> *In preparation*.
+
+## Model Overview
+This repository implements a Brownian dynamics model for epithelial bud formation in salivary gland morphogenesis. The model simulates:
+
+- Particle-based representation of basement membrane
+- Spring-like interactions between adjacent particles
+- Growth dynamics (exponential, washout, perimeter-only)
+
+For details we refer to the research paper.
 
 ## Installation
 
@@ -11,8 +20,8 @@ This project uses Python 3. The simulation code relies on JAX.
 
 1. **Clone the repository:**
 ```bash
-   git clone https://github.com/mahadevan-harvard/threshold-branching-erosion.git
-   cd threshold-branching-erosion
+   git clone https://github.com/mahadevan-harvard/salivarygland-morphogenesis.git
+   cd salivarygland-morphogenesis
 ```
    
 2. **(Optional but recommended) Install jax and jax-md through conda environment:**
@@ -22,17 +31,25 @@ This project uses Python 3. The simulation code relies on JAX.
    conda install -c conda-forge jax jaxmd
 ```
 
-3. **Install the package in editable mode::**
+3. **Install the package in editable mode:**
 ```bash
     pip install -e .
 ```
   
+## Required software and packages
+- Python 3
+- JAX
+- jax-md
+- numpy
+- matplotlib
+- scipy
+
 ## Repository structure
 
 - `analysis/`: Scripts to plot simulation and segmentation output
 - `simulate/`: Core simulation and solver code
 
-## simulation scripts
+### simulation scripts
 
 The core of the simulations code is:
 - `interactions.py`: definitions of interaction energies
@@ -51,7 +68,7 @@ To run parameter sweeps the following scripts can be used:
 
 These scripts create an input folder where they store a `.json` file with the input parameters, an output folder where the positions are stored at specified intervals in a `.npz` file. This folder also contains a `log/` subfolder, that contains the `stdout` of the simulation. The code to generate the `.json` files is contained in `generate_params.py`.
 
-## Analysis scripts
+### Analysis scripts
 These are the scripts that are used for analysis of the simulation output (and sometimes experimental data). 
 These scripts also create the basis for the figures in the corresponding paper.
 
@@ -67,3 +84,10 @@ A brief description of the scripts:
 - `create_still_curvature.py`: Plot outline of filament colored according to curvature (Fig. 3B, Fig. 5A).
 - `create_still_line.py`: Plot outline of filament in a single color (Fig. 4A, Fig. 6A-C).
 - `PlotLibrary.py`: Plotting class with information regarding figure dimensions for different journals.
+
+## License
+This project is licensed under [MIT/BSD/etc.] - include license file reference.
+
+## Citation
+If you use this code, please cite:
+> Tauber, J., et al. (2026). Basement membrane dynamics governs salivary gland budding morphogenesis. *In preparation*.
