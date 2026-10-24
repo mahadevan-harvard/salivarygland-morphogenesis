@@ -1,5 +1,5 @@
 # salivarygland-morphogenesis
-Brownian dynamics model for bud formation in early morphogenesis of salivary gland.
+Brownian dynamics model for bud formation in early morphogenesis of salivary glands.
 
 > *Basement membrane dynamics governs salivary gland budding morphogenesis,*  
 > J. Tauber, A. Morales, H. Li, J. Cui, C. Stringer, G.P.T. Choi, S. Wang, L. Mahadevan  
@@ -15,7 +15,6 @@ This repository implements a Brownian dynamics model for epithelial bud formatio
 For details we refer to the research paper.
 
 ## Installation
-
 This project uses Python 3. The simulation code relies on JAX.
 
 1. **Clone the repository:**
@@ -45,12 +44,10 @@ This project uses Python 3. The simulation code relies on JAX.
 - scipy
 
 ## Repository structure
-
 - `analysis/`: Scripts to plot simulation and segmentation output
 - `simulate/`: Core simulation and solver code
 
 ### simulation scripts
-
 The core of the simulations code is:
 - `interactions.py`: definitions of interaction energies
 - `anchoredcircle_exponential.py`: Brownian dynamics implementation and growth definitions
@@ -86,7 +83,7 @@ A brief description of the scripts:
 - `PlotLibrary.py`: Plotting class with information regarding figure dimensions for different journals.
 
 ## License
-This project is licensed under [MIT/BSD/etc.] - include license file reference.
+This project is licensed under [MIT/] - `LICENSE`.
 
 ## Citation
 If you use this code, please cite:
