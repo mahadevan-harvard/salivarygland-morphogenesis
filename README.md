@@ -83,7 +83,7 @@ A brief description of the scripts:
 - `PlotLibrary.py`: Plotting class with information regarding figure dimensions for different journals.
 
 ## License
-This project is licensed under [MIT/] - `LICENSE`.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Citation
 If you use this code, please cite:
