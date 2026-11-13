@@ -40,8 +40,10 @@ if __name__ == "__main__":
     inputFolder = "kappa_sweep"
     outputFolder = inputFolder
     kappa_array = np.array([0.0, 5e-6])
-    z0 = 1.0
-    k_P = 0.01
+    z0 = 8.0
+    k_P = 0.1
+    V = 1
+    seed = 2358692411
 
     # Generate the data structure
     inputPath = f"input/{inputFolder}"
@@ -51,7 +53,7 @@ if __name__ == "__main__":
 
     paths = []
     for i,kappa in enumerate(kappa_array):
-        filename = generate_params(z0=z0, k_P=k_P, kappa_n=kappa, inputFolder=inputPath)
+        filename = generate_params(z0=z0, k_P=k_P, kappa_n=kappa, inputFolder=inputPath, dt=0.1, seed=seed, V=V)
         path = f"{inputPath}/{filename}"
         paths += [path]
 

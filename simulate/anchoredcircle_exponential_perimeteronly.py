@@ -42,7 +42,6 @@ def run_simulation(inputFile, outputPath=""):
 		z0_basis = p["geometry"]["z0_basis"] / d # Now set to 1/1000 of a cell
 		z0 = z0_basis*p["geometry"]["z"] / d
 	
-	
 		kappa_nucleus = p["material"]["kappa_nucleus"]
 		motility = p["material"]["motility"]
 		k_A = p["material"]["k_A"]

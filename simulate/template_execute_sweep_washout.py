@@ -41,6 +41,8 @@ if __name__ == "__main__":
     outputFolder = inputFolder
     z0_array = np.array([15.0])
     kp_array = np.array([0.01])
+    V_array = np.array([1,2,3])
+    seed_array = np.array([2358692411, 3137230304, 2766775195])    
 
     # Generate the data structure
     inputPath = f"input/{inputFolder}"
@@ -49,12 +51,14 @@ if __name__ == "__main__":
     Path(outputPath).mkdir(exist_ok=True)
 
     paths = []
-    for z0 in z0_array:
-        for k_P in kp_array:
-
-            filename = generate_params(z0=z0, k_P=k_P, kappa_n=5e-6, dt=0.01, V=1, seed=2358692411, inputFolder=inputPath)
-            path = f"{inputPath}/{filename}"
-            paths += [path]
+    for j, version in enumerate(V_array):
+        for z0 in z0_array:
+            for k_P in kp_array:
+                seed = int(seed_array[j])
+                V = int(version)
+                filename = generate_params(z0=z0, k_P=k_P, kappa_n=5e-6, dt=0.01, V=V, seed=seed, inputFolder=inputPath)
+                path = f"{inputPath}/{filename}"
+                paths += [path]
 
     # ------------------------------------------------------------------
     # Run simulations in parallel

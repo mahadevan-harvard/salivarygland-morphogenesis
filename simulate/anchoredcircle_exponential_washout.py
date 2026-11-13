@@ -294,7 +294,7 @@ def run_simulation(inputFile, outputPath=""):
 		print('Energy of the system, U = {:f}'.format(combined_energy_fn(r, l0_list, z_list, target_area, target_perimeter)))
 		print(f"Execution time: {end - start:.4f} seconds")
 	
-		np.savez_compressed(f"{outputPath}/shape_array_r_{r0:.2g}_z_{z0:.2g}_kP_{k_P:.2g}_kn_{kappa_nucleus:.2g}_tg_{tau_g:.2g}_tgi_{tau_g_i:.2g}_M_{motility:.2g}_dt_{dt}_exp__V{Version:03d}_washout.npz",data=shapes, edge_list=bond_list)
+		np.savez_compressed(f"{outputPath}/shape_array_r_{r0:.2g}_z_{z0:.2g}_kP_{k_P:.2g}_kn_{kappa_nucleus:.2g}_tg_{tau_g:.2g}_tgi_{tau_g_i:.2g}_M_{motility:.2g}_dt_{dt}_exp_V{Version:03d}_washout.npz",data=shapes, edge_list=bond_list)
 
 		jax.clear_caches()
 
