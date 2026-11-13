@@ -71,50 +71,54 @@ def compute_perimeter(R):
 # Washout simulation
 z_list = np.array([0.015])
 for cnt, z in enumerate(z_list):
-    
-    # Load data from npz file          
-    data = np.load(f"output/washout_paper/shape_array_r_5_z_{z}_kP_0.01_kn_5e-06_tg_1e+06_tgi_2e+06_M_1e-07_dt_0.1_expV0.1_washout.npz")
-    shapes = data["data"]
-
-    Nframes = np.shape(shapes)[2]
-
-    area_array = np.zeros(Nframes)
-    perimeter_array = np.zeros(Nframes)
-    time_array = np.arange(Nframes)*0.01
-
-    for i in range(Nframes):
-        shape = shapes[:,:,i]
-        area_array[i] = compute_area(shape)
-        perimeter_array[i] = compute_perimeter(shape)
 	
-    chi = acircularity(perimeter_array,area_array) 
+	# Load data from npz file          
+	data = np.load(f"output/washout/shape_array_r_5_z_{z}_kP_0.01_kn_5e-06_tg_1e+06_tgi_2e+06_M_1e-07_dt_0.01_expV001_washout.npz")
+	shapes = data["data"]
 
-    ax.plot(time_array, 100*(chi-chi[0]), c="firebrick",label=f"Washout",lw=1,zorder=3)
+	Nframes = np.shape(shapes)[2]
+
+	area_array = np.zeros(Nframes)
+	perimeter_array = np.zeros(Nframes)
+	time_array = np.arange(Nframes)*0.01
+
+	for i in range(Nframes):
+		shape = shapes[:,:,i]
+		area_array[i] = compute_area(shape)
+		perimeter_array[i] = compute_perimeter(shape)
+	
+	chi = acircularity(perimeter_array,area_array) 
+
+	ax.plot(time_array, 100*(chi-chi[0]), c="firebrick",label=f"Washout",lw=1,zorder=3)
 
 # Reference simulations
 z_list = np.array([0.001,0.015])
 c_list = np.array([0.44,0.70])
 for cnt, z in enumerate(z_list):
-    
-    # Load data from npz file          
-    data = np.load(f"output/thickness_paper/shape_array_r_5_z_{z}_kP_0.01_kn_5e-06_tg_1e+06_tgi_2e+06_M_1e-07_dt_0.1_expV0.1.npz")
-    shapes = data["data"]
-
-    Nframes = np.shape(shapes)[2]
-
-    area_array = np.zeros(Nframes)
-    perimeter_array = np.zeros(Nframes)
-    time_array = np.arange(Nframes)*0.01
-
-    for i in range(Nframes):
-        shape = shapes[:,:,i]
-        area_array[i] = compute_area(shape)
-        perimeter_array[i] = compute_perimeter(shape)
 	
-    chi = acircularity(perimeter_array,area_array) 
+	# Load data from npz file          
+	if z<0.003:
+		data = np.load(f"output/thickness_sweep/shape_array_r_5_z_{z}_kP_0.01_kn_5e-06_tg_1e+06_tgi_2e+06_M_1e-07_dt_0.01_exp_V001_k12.npz")
+	else:
+		data = np.load(f"output/thickness_sweep/shape_array_r_5_z_{z}_kP_0.01_kn_5e-06_tg_1e+06_tgi_2e+06_M_1e-07_dt_0.1_exp_V001_k12.npz")
+		 
+	shapes = data["data"]
 
-    print(c_list[cnt])
-    ax.plot(time_array, 100*(chi-chi[0]), c=cmap(c_list[cnt]),label=f"$z={z_list[cnt]:.2g}$",lw=1)
+	Nframes = np.shape(shapes)[2]
+
+	area_array = np.zeros(Nframes)
+	perimeter_array = np.zeros(Nframes)
+	time_array = np.arange(Nframes)*0.01
+
+	for i in range(Nframes):
+		shape = shapes[:,:,i]
+		area_array[i] = compute_area(shape)
+		perimeter_array[i] = compute_perimeter(shape)
+	
+	chi = acircularity(perimeter_array,area_array) 
+
+	print(c_list[cnt])
+	ax.plot(time_array, 100*(chi-chi[0]), c=cmap(c_list[cnt]),label=f"$z={z_list[cnt]:.2g}$",lw=1)
 
 ######################################################################
 # Final layout settings

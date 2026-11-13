@@ -43,7 +43,7 @@ def angle_fn(R):
 	return theta
 
 # Load data from npz files
-data = np.load("./output/standard_sweep/shape_array_r_5_z_0.001_kP_0.01_kn_0_tg_1e+06_tgi_2e+06_M_1e-07_dt_0.01_expV0.1.npz")
+data = np.load("./data_selected/output/phasediagram_kp_z/shape_array_r_5_z_0.001_kP_0.01_kn_0_tg_1e+06_tgi_2e+06_M_1e-07_dt_0.01_exp_V001_k12.npz")
 
 shapes = data["data"]  # Shape: (Nnodes, 2, Niterations)
 edge_list = data["edge_list"]  # List of edges, shape: (Nedges, 2)
@@ -51,7 +51,7 @@ edge_list = data["edge_list"]  # List of edges, shape: (Nedges, 2)
 l_init = np.linalg.norm(shapes[1:, :, 0] - shapes[:-1, :, 0], axis=1)
 
 # Select a specific frame
-frame = 149
+frame = 150
 
 # Initialize the plot
 fig, ax = plt.subplots(figsize=(1,1))
@@ -81,7 +81,7 @@ bond_curvature[0] = curvature[0]
 bond_curvature[-1] = curvature[2]
 bond_curvature[1:-1] = (curvature[:-1] + curvature[1:]) / 2.0
 
-rel_curvature = (bond_curvature / 6.0) + 0.5
+rel_curvature = (bond_curvature / 2.0) + 0.5
 
 # Create edge segments
 segments = []

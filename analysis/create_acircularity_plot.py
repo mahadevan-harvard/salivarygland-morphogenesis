@@ -74,9 +74,9 @@ for cnt, z in enumerate(z_list):
 	
 	# Load data from npz file          
 	if cnt < 1:
-		data = np.load(f"output/thickness_paper/shape_array_r_5_z_{z}_kP_0.01_kn_5e-06_tg_1e+06_tgi_2e+06_M_1e-07_dt_0.01_expV0.1.npz")
+		data = np.load(f"data_selected/output/thickness_sweep/shape_array_r_5_z_{z}_kP_0.01_kn_5e-06_tg_1e+06_tgi_2e+06_M_1e-07_dt_0.01_exp_V001_k12.npz")
 	else:
-		data = np.load(f"output/thickness_paper/shape_array_r_5_z_{z}_kP_0.01_kn_5e-06_tg_1e+06_tgi_2e+06_M_1e-07_dt_0.1_expV0.1.npz")
+		data = np.load(f"data_selected/output/thickness_sweep/shape_array_r_5_z_{z}_kP_0.01_kn_5e-06_tg_1e+06_tgi_2e+06_M_1e-07_dt_0.1_exp_V001_k12.npz")
 
 	shapes = data["data"]
 

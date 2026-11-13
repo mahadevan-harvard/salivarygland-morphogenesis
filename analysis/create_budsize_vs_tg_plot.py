@@ -68,14 +68,21 @@ def calculate_signed_curvature_for_aperiodic_curve(x, y):
 	# Dot products for angle magnitude
 	dot_products = np.sum(forward_vectors * backward_vectors, axis=1)
 	magnitudes_product = lengths_forward * lengths_backward
-	angles = np.arccos(
-		np.clip(dot_products / magnitudes_product, -1.0, 1.0)
-	)  # Angle in radians
 
-	# Cross products for angle sign
+	cos_angles = np.divide(
+		dot_products,
+		magnitudes_product,
+		out=np.ones_like(dot_products),
+		where=magnitudes_product > 1e-12
+	)
+
+	angles = np.arccos(
+		np.clip(cos_angles, -1.0, 1.0)
+	)
+
 	cross_products = (
-		forward_vectors[:, 0] * backward_vectors[:, 1]
-		- forward_vectors[:, 1] * backward_vectors[:, 0]
+		backward_vectors[:, 0] * forward_vectors[:, 1]
+		- backward_vectors[:, 1] * forward_vectors[:, 0]
 	)
 
 	# Average segment lengths
@@ -94,99 +101,125 @@ def calculate_signed_curvature_for_aperiodic_curve(x, y):
 # Script for plotting data
 ######################################################################
 
-tg_list = np.array([1e3, 3e3, 8e3, 1e4, 3e4, 8e4, 1e5, 3e5, 8e5, 1e6, 2e6,3e6, 5e6, 1e7])
-dt_list = np.array([0.0001, 0.001, 0.001, 0.001, 0.01, 0.01, 0.01, 0.1, 0.1, 0.1, 0.1,0.1,0.1,0.1])
+tg_list = np.array([1e3, 2e3, 3e3, 1e4, 2e4, 3e4, 5e4, 1e5, 2e5, 3e5, 1e6, 2e6, 3e6, 5e6, 1e7])
+dt_list = np.array([0.0001, 0.001, 0.001, 0.001, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01,0.1,0.1,0.1,0.1])
 V_list = np.array([1,2,3])
 
 kn = 5e-6
-z = 0.001
 r0 = 5
 h0 = 1
 L0 = 2*np.pi*(r0+h0)
 
-mu = z
-k_eff = ((1/12)*z**3 + kn) / L0**4
-tau_r = mu / k_eff
+z_range = np.array([0.001])
 
-N = len(tg_list)
-lambda_dict = {}
+for z in z_range:
 
-for i, tg in enumerate(tg_list):
-	lambda_dict[tg] = []
-	for j, V in enumerate(V_list):
-		tgi = 2*tg
+	xi = 1
+	k_eff = ((1/12)*z**3 + kn) / L0**4
+	tau_r = xi / k_eff
 
-		# Load data from npz file
-		data = np.load(f"output/tau_sweep_version/shape_array_r_5_z_0.001_kP_0.01_kn_5e-06_tg_{tg:.2g}_tgi_{tgi:.2g}_M_1e-07_dt_{dt_list[i]}_exp_V{V:03d}.npz")
-		shapes = data["data"]  # Shape: (Nnodes, 2, Niterations)
+	N = len(tg_list)
+	lambda_dict = {}
 
-		if len(shapes) < 150:
-			print("Simulation not completed.")
-			continue
+	for i, tg in enumerate(tg_list):
+		lambda_dict[tg] = []
+		for j, V in enumerate(V_list):
+			tgi = 2*tg
 
-		invalid_numbers = np.any(np.isnan(shapes))
-		if invalid_numbers:
-			print("NaNs detected.")
-			continue
+			# Load data from npz file
+			data = np.load(f"data_selected/growthrate_sweep/shape_array_r_5_z_0.001_kP_0.01_kn_5e-06_tg_{tg:.2g}_tgi_{tgi:.2g}_M_1e-07_dt_{dt_list[i]}_exp_V{V:03d}_k12.npz")
+			shapes = data["data"]  # Shape: (Nnodes, 2, Niterations)
 
-		Nframes = np.shape(shapes)[2]
-		Nbud_array = np.zeros(Nframes)
+			if len(shapes) < 150:
+				print("Simulation not completed.")
+				continue
 
-		for frame in range(Nframes):
-			shape = shapes[:,:,frame]
+			invalid_numbers = np.any(np.isnan(shapes))
+			if invalid_numbers:
+				print("NaNs detected.")
+				continue
 
-			# Fit a B-spline to the filament
-			tck, u = splprep([shape[:, 0], shape[:, 1]], s=0, per=False)  # `s=0` for exact fit
-			path_length = u / np.max(u)  # Normalize path length (0 to 1)
+			Nframes = np.shape(shapes)[2]
+			Nbud_array = np.zeros(Nframes)
 
-			u_fine = np.linspace(0, 1, 1000, endpoint=False)  # Fine parameter range for smooth B-spline
-			x_spline, y_spline = splev(u_fine, tck)  # Evaluate B-spline at fine points
-			
-			# Calculate curvature (κ) at each point using the B-spline derivatives
-			raw_curvature = calculate_signed_curvature_for_aperiodic_curve(x_spline, y_spline) #calculate_curvature_from_angles_and_lengths(angles, segment_lengths)
-			curvature = gaussian_filter1d(raw_curvature, sigma=1, mode='constant',cval=-1)  # Adjust sigma as neede
-	
-			# Count the number of positive peaks in the curvature
-			peaks, _ = find_peaks(curvature, height=np.max([0.5,np.max(curvature)/2]))  # Adjust `height` as needed for sensitivity
-			Nbuds = len(peaks)
-			
-			Nbud_array[frame] = Nbuds
+			for frame in range(Nframes):
+				shape = shapes[:,:,frame]
 
-		Nbuds = np.mean(Nbud_array[99:])
+				# Fit a B-spline to the filament
+				tck, u = splprep([shape[:, 0], shape[:, 1]], s=0, per=False)  # `s=0` for exact fit
+				path_length = u / np.max(u)  # Normalize path length (0 to 1)
+
+				u_fine = np.linspace(0, 1, 1000, endpoint=False)  # Fine parameter range for smooth B-spline
+				x_spline, y_spline = splev(u_fine, tck)  # Evaluate B-spline at fine points
+				
+				# Calculate curvature (κ) at each point using the B-spline derivatives
+				raw_curvature = calculate_signed_curvature_for_aperiodic_curve(x_spline, y_spline) #calculate_curvature_from_angles_and_lengths(angles, segment_lengths)
+				curvature = gaussian_filter1d(raw_curvature, sigma=1, mode='constant',cval=-1)  # Adjust sigma as neede
 		
-		lambda_dict[tg].append(L0/Nbuds)
+				# Detect local minima and maxima
+				minima, _ = find_peaks(-curvature, prominence=1)
 
-means = [np.mean(lambda_dict[tg]) for tg in tg_list]
-stds = [np.std(lambda_dict[tg], ddof=1) for tg in tg_list]
+				# keep only negative minima
+				minima = minima[curvature[minima] < 0]
 
-for i, tg in enumerate(tg_list):
-    values = lambda_dict[tg]
-    jitter = np.random.normal(0, 0.1, len(values))
-    ax.scatter(
-        np.full(len(values), tg_list[i]/tau_r),
-        values,
-        color='grey',
-        s=10,
-        lw=0
-    )
+				# Exclude endpoints
+				endpoint_margin = 12
 
-# Plot Mean and std
-ax.errorbar(tg_list/tau_r,means,yerr=stds,marker="_",color='k',capsize=3,lw=0,elinewidth=.5,markersize=3,markeredgewidth=.5,capthick=1.5)
+				minima = minima[
+					(minima > endpoint_margin)
+					& (minima < len(curvature)-endpoint_margin)
+				]
 
-# Fit power-law to data
-if N > 1:
-	def lambda_fit(tau_g, lambda_0, alpha):
-		return (lambda_0 * tau_g**alpha) / np.sqrt(1 + (lambda_0 * tau_g**alpha)**2)
+				# anchors
+				anchors = np.concatenate((
+					[0],
+					np.sort(minima),
+					[len(curvature)-1]
+				))
 
-	p0 = [1.0, 0.5] # Initial guess
+				Nbuds = len(anchors) - 1
+				
+				Nbud_array[frame] = Nbuds
 
-	popt, pcov = opt.curve_fit(lambda_fit, tg_list/tau_r, np.array(means)/L0, p0)
-	a_fit, b_fit = popt
-	print(f"Fitted parameters: a = {a_fit:.3f}, b = {b_fit:.3f}")
-	label = (rf"$\alpha={b_fit:.2f}$")
+			Nbuds = Nbud_array[-1]
+			
+			lambda_dict[tg].append(L0/Nbuds)
 
-	fit_kn = np.logspace(-6,-1,50)
-	ax.plot(fit_kn, L0*lambda_fit(fit_kn, *popt), lw=1, color="cornflowerblue",zorder=0,label=label)
+	means = [np.mean(lambda_dict[tg]) for tg in tg_list]
+	stds = [np.std(lambda_dict[tg], ddof=1) for tg in tg_list]
+
+	for i, tg in enumerate(tg_list):
+		values = lambda_dict[tg]
+		jitter = np.random.normal(0, 0.1, len(values))
+		ax.scatter(
+			np.full(len(values), tg_list[i]/tau_r),
+			values,
+			color='grey',
+			s=10,
+			lw=0
+		)
+
+	# Plot Mean and std
+	ax.errorbar(tg_list/tau_r,means,yerr=stds,marker="_",color='k',capsize=3,lw=0,elinewidth=.5,markersize=3,markeredgewidth=.5,capthick=1.5)
+
+	# Fit power-law to data
+	if N > 1:
+		def lambda_fit(tau_g, lambda_0, alpha):
+			return (lambda_0 * tau_g**alpha) / np.sqrt(1 + (lambda_0 * tau_g**alpha)**2)
+
+		p0 = [1.0, 0.5] # Initial guess
+		bounds=([0, 0], [2, 1])
+
+		popt, pcov = opt.curve_fit(lambda_fit, tg_list/tau_r, np.array(means)/L0, p0, bounds=bounds)
+		a_fit, b_fit = popt
+		perr = np.sqrt(np.diag(pcov))		
+		sigma_a = perr[0]
+		sigma_b = perr[1]		
+		print(f"Fitted parameters: a = {a_fit:.3f}, b = {b_fit:.3f}")
+		label = (rf"$\alpha={b_fit:.2f}\pm{sigma_b:.2f}$")
+
+		fit_kn = np.logspace(-9,-4,50)
+		ax.plot(fit_kn, L0*lambda_fit(fit_kn, *popt), lw=1, color='#333333',zorder=0,label=label)
 
 ######################################################################
 # Final layout settings
@@ -200,8 +233,8 @@ ax.set_ylabel(r'$\lambda$ [$d$]')
 
 ax.set_xscale("log")
 
-ax.set_xlim([1e-6,1e-1])
-ax.set_ylim([0,17])
+ax.set_xlim([1e-9,1e-4])
+ax.set_ylim([0,10])
 
 leg = plotlib.set_legend(ax,pos=2)
 ax.yaxis.set_major_locator(MultipleLocator(5))
@@ -212,6 +245,6 @@ ax.xaxis.set_minor_locator(LogLocator(base=10.0, subs=np.arange(1, 10) * 0.1, nu
 plotlib.set_position(ax,x=0.26,y=0.25,width=0.65,height=0.70)
 
 # Save as PDF
-plt.savefig(f"results/Nbuds_tg_exp_V3_extended.pdf",format="pdf", bbox_inches="tight",transparent=True)
+plt.savefig(f"results/Nbuds_tg_exp_k12.pdf",format="pdf", bbox_inches="tight",transparent=True)
 
 plt.show()

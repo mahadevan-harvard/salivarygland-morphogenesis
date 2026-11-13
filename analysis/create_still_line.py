@@ -48,9 +48,9 @@ kP = 0.01
 kn=5e-6
 dt = 0.1
 tg=1e6
-folder = "standard_sweep_k12"
+folder = "phasediagram_kp_z"
 
-data = np.load(f"./output/{folder}/shape_array_r_5_z_{z}_kP_{kP}_kn_{kn}_tg_{tg:.2g}_tgi_{2*tg:.2g}_M_1e-07_dt_{dt}_exp_V001_k12.npz")
+data = np.load(f".data_selected/output/{folder}/shape_array_r_5_z_{z}_kP_{kP}_kn_{kn}_tg_{tg:.2g}_tgi_{2*tg:.2g}_M_1e-07_dt_{dt}_exp_V001_k12.npz")
 
 shapes = data["data"]  # Shape: (Nnodes, 2, Niterations)
 edge_list = data["edge_list"]  # List of edges, shape: (Nedges, 2)
